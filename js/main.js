@@ -43,67 +43,121 @@ var createAds = () => {
   }
   return ads;
 }
-
 var ads = createAds();
 
 
 var $map = document.querySelector('.map');
+
+
 var $mapFiltersContainer = document.querySelector('.map__filters-container');
 var $pin = document.querySelector('#pin').content.querySelector('.map__pin');
 var $mapPins = document.querySelector('.map__pins');
 var $card = document.querySelector('#card').content.querySelector('.map__card');
-$map.classList.remove('map--faded');
 
-var fragment = document.createDocumentFragment()
 
-for (var i = 0; i < ads.length; i++) {
-  var newPin = $pin.cloneNode(true);
-  var img = newPin.querySelector('img');
-  img.src = ads[i].author.avatar;
-  img.alt = ads[i].offer.title;
-  newPin.style.left = `${ads[i].offer.location.x}px`;
-  newPin.style.top = `${ads[i].offer.location.y}px`;
-  fragment.appendChild(newPin);
+var $fieldsets = document.querySelectorAll('fieldset');
+
+var disabledForm = function (state) {
+  if (state) {
+    for (var i = 0; i < $fieldsets.length; i++) {
+    $fieldsets[i].disabled = true;
+    };
+  } else {
+      for (var i = 0; i < $fieldsets.length; i++) {
+      $fieldsets[i].disabled = false;
+      };
+    }
+};
+disabledForm(true);
+
+
+
+var $pinMain = document.querySelector('.map__pin--main');
+$pinMain.addEventListener('mousedown', function (evt) {
+  if (evt.which === 1) {
+    disabledForm(false);
+    $map.classList.remove('map--faded');
+    setAdressValue($pinMain);
+  };
+});
+
+$pinMain.addEventListener('keydown', function (evt) {
+  if (evt.code == 'Enter') {
+    disabledForm(false);
+    $map.classList.remove('map--faded');
+    setAdressValue($pinMain);
+  };
+});
+
+var $adressInput = document.querySelector('input[name=address]');
+var setAdressValue = function (pin) {
+  console.log(pin);
+  var left = pin.style.left.slice(0, -2);
+  var top = pin.style.top.slice(0, -2)
+  $adressInput.value = `${left}, ${top}`
 }
 
-$mapPins.appendChild(fragment)
+var $roomNumberSelect = document.querySelector('#room_number');
+var $capacitySelect = document.querySelector('#capacity');
 
-var createCardAd = (adInfo) => {
-  var newCard = $card.cloneNode(true);
-  newCard.querySelector('.popup__title').textContent = adInfo.offer.title;
-  newCard.querySelector('.popup__text--address').textContent = adInfo.offer.address;
-  newCard.querySelector('.popup__text--price').textContent = `${adInfo.offer.price}₽/ночь`;
-  switch (adInfo.offer.type) {
-    case 'flat':
-      newCard.querySelector('.popup__type').textContent = 'Квартира';
-      break
-    case 'bungalo':
-      newCard.querySelector('.popup__type').textContent = 'Бунгало';
-      break
-    case 'house':
-      newCard.querySelector('.popup__type').textContent = 'Дом';
-      break
-    case 'palace':
-      newCard.querySelector('.popup__type').textContent = 'Дворец';
-  }
-
-  newCard.querySelector('.popup__text--capacity').textContent = `${adInfo.offer.rooms} комнаты для ${adInfo.offer.guests} гостей`;
-  newCard.querySelector('.popup__text--time').textContent = `Заезд после ${adInfo.offer.checkin}, выезд до ${adInfo.offer.checkout}`;
-  newCard.querySelector('.popup__features').textContent = adInfo.offer.features;
-  newCard.querySelector('.popup__description').textContent = adInfo.offer.description;
-
-  var $photoAd = newCard.querySelector('.popup__photo');
-  $photoAd.src = adInfo.offer.photos[0];
-  var $photos = newCard.querySelector('.popup__photos');
-  for (var i = 1; i < adInfo.offer.photos.length; i++) {
-    var newPhoto = $photoAd.cloneNode(true)
-    newPhoto.src = adInfo.offer.photos[i];
-    $photos.appendChild(newPhoto);
-  }
-
-  newCard.querySelector('.popup__avatar').src = adInfo.author.avatar;
-
-  return newCard;
+$roomNumberSelect.addEventListener('onchange', function (evt) {
+  var op = $roomNumberSelect.querySelector('option[selected]');
+  console.log(evt);
 }
+)
 
-$map.insertBefore(createCardAd(ads[0]), $mapFiltersContainer);
+
+
+// var fragment = document.createDocumentFragment()
+
+// for (var i = 0; i < ads.length; i++) {
+//   var newPin = $pin.cloneNode(true);
+//   var img = newPin.querySelector('img');
+//   img.src = ads[i].author.avatar;
+//   img.alt = ads[i].offer.title;
+//   newPin.style.left = `${ads[i].offer.location.x}px`;
+//   newPin.style.top = `${ads[i].offer.location.y}px`;
+//   fragment.appendChild(newPin);
+// }
+
+// $mapPins.appendChild(fragment)
+
+// var createCardAd = (adInfo) => {
+//   var newCard = $card.cloneNode(true);
+//   newCard.querySelector('.popup__title').textContent = adInfo.offer.title;
+//   newCard.querySelector('.popup__text--address').textContent = adInfo.offer.address;
+//   newCard.querySelector('.popup__text--price').textContent = `${adInfo.offer.price}₽/ночь`;
+//   switch (adInfo.offer.type) {
+//     case 'flat':
+//       newCard.querySelector('.popup__type').textContent = 'Квартира';
+//       break
+//     case 'bungalo':
+//       newCard.querySelector('.popup__type').textContent = 'Бунгало';
+//       break
+//     case 'house':
+//       newCard.querySelector('.popup__type').textContent = 'Дом';
+//       break
+//     case 'palace':
+//       newCard.querySelector('.popup__type').textContent = 'Дворец';
+//   }
+
+//   newCard.querySelector('.popup__text--capacity').textContent = `${adInfo.offer.rooms} комнаты для ${adInfo.offer.guests} гостей`;
+//   newCard.querySelector('.popup__text--time').textContent = `Заезд после ${adInfo.offer.checkin}, выезд до ${adInfo.offer.checkout}`;
+//   newCard.querySelector('.popup__features').textContent = adInfo.offer.features;
+//   newCard.querySelector('.popup__description').textContent = adInfo.offer.description;
+
+//   var $photoAd = newCard.querySelector('.popup__photo');
+//   $photoAd.src = adInfo.offer.photos[0];
+//   var $photos = newCard.querySelector('.popup__photos');
+//   for (var i = 1; i < adInfo.offer.photos.length; i++) {
+//     var newPhoto = $photoAd.cloneNode(true)
+//     newPhoto.src = adInfo.offer.photos[i];
+//     $photos.appendChild(newPhoto);
+//   }
+
+//   newCard.querySelector('.popup__avatar').src = adInfo.author.avatar;
+
+//   return newCard;
+// }
+
+// $map.insertBefore(createCardAd(ads[0]), $mapFiltersContainer);
