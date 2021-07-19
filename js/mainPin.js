@@ -1,6 +1,7 @@
 import { disabledForm, setAdressValue } from "./form.js ";
-import { getPins } from "./pins.js ";
 import { maxValueX, maxValueY } from './main.js';
+import { load } from "./backend.js";
+import { setPins, deletePins } from "./pins.js"
 
 var $map = document.querySelector('.map');
 var $pinMain = document.querySelector('.map__pin--main');
@@ -11,6 +12,8 @@ $pinMain.addEventListener('keydown', function (evt) {
     disabledForm(false);
     $map.classList.remove('map--faded');
     setAdressValue($pinMain);
+    deletePins()
+    load(setPins)
   };
 });
 
@@ -37,6 +40,7 @@ $pinMain.addEventListener('mousedown', function ( evt ) {
       $pinMain.style.left = '-32.5px';
     };
     if ($pinMain.offsetLeft - shift.x > maxValueX -32.5) {
+
       $pinMain.offsetLeft = `${maxValueX + 32.5}px `;
     };
     if ($pinMain.offsetTop - shift.y < 120) {
@@ -55,8 +59,9 @@ $pinMain.addEventListener('mousedown', function ( evt ) {
     upEvt.preventDefault();
     disabledForm(false);
     $map.classList.remove('map--faded');
+    deletePins()
+    load(setPins)
 
-    getPins()
     document.removeEventListener('mousemove', onMouseMove)
     document.removeEventListener('mouseup', onMouseUp)
   }
