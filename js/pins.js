@@ -1,6 +1,7 @@
 import { createCardAd } from './cards.js';
 import { maxValueY, maxValueX } from './main.js';
-import {getRandomNumber } from './utils.js'
+import { getRandomNumber } from './utils.js'
+
 
 var $pin = document.querySelector('#pin').content.querySelector('.map__pin');
 var $mapPins = document.querySelector('.map__pins');

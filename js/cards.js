@@ -22,9 +22,8 @@ export var createCardAd = (adInfo) => {
 
   newCard.querySelector('.popup__text--capacity').textContent = `${adInfo.offer.rooms} комнаты для ${adInfo.offer.guests} гостей`;
   newCard.querySelector('.popup__text--time').textContent = `Заезд после ${adInfo.offer.checkin}, выезд до ${adInfo.offer.checkout}`;
-  newCard.querySelector('.popup__features').textContent = adInfo.offer.features;
   newCard.querySelector('.popup__description').textContent = adInfo.offer.description;
-
+  createFeaturesList(adInfo, newCard)
   createPhotoList(adInfo, newCard)
 
   newCard.querySelector('.popup__avatar').src = adInfo.author.avatar;
@@ -42,13 +41,25 @@ var createPhotoList = function (info, newCard) {
   var $photos = newCard.querySelector('.popup__photos');
   $photoAd.remove()
   if (info.offer.photos) {
-    $photoAd.src = info.offer.photos[0];
-    for (var i = 1; i < info.offer.photos.length; i++) {
+    for (var i = 0; i < info.offer.photos.length; i++) {
       var newPhoto = $photoAd.cloneNode(true)
       newPhoto.src = info.offer.photos[i];
       $photos.appendChild(newPhoto);
     }
   }
+}
 
-  return $photos
+var createFeaturesList = function (info, newCard) {
+  var $featuresList = newCard.querySelector('.popup__features')
+  var $featuresItems = $featuresList.querySelectorAll('.popup__feature')
+  if (!info.offer.features) {
+    $featuresList.remove()
+    return null
+  }
+  for (var i = 0; i < $featuresItems.length; i++) {
+    var featureName = $featuresItems[i].classList[1].slice(16);
+    if ( info.offer.features.indexOf( featureName ) === -1 ) {
+      $featuresItems[i].remove()
+    }
+  }
 }

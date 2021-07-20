@@ -1,3 +1,8 @@
+'use strict';
+
+import { save } from "./backend.js";
+import { errorHandler, resetAll } from "./utils.js";
+
 var $adressInput = document.querySelector('input[name=address]');
 var $roomNumberSelect = document.querySelector('#room_number');
 var $capacitySelect = document.querySelector('#capacity');
@@ -48,3 +53,11 @@ export var setAdressValue = function (pin) {
   var top = pin.style.top.slice(0, -2)
   $adressInput.value = `${left}, ${top}`
 }
+
+var $form = document.querySelector('.ad-form');
+
+$form.addEventListener('submit', function(evt) {
+  evt.preventDefault();
+  save(new FormData($form), resetAll, errorHandler)
+})
+
